@@ -1,7 +1,39 @@
 import { Typography, Card, CardContent, Box, TextField, Button } from '@mui/material';
-
+import { useState } from "react"
 
 const TitleCard = (props) => {
+
+    const [name, setName] = useState("")
+    const [status, setStatus] = useState("")
+
+    const handlePost = async () => {
+        const newPost = {
+            from: name,
+            content: status
+        }
+
+        const res = await fetch("http://localhost:8000/api/posts/new", { //change in prd
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newPost)
+        })
+
+        const resJson = await res.json()
+
+        if (!res.ok) {
+            console.log(resJson)
+
+            if (resJson.msg.errors.content.message == "MAX_CHARACTERS_ERROR"){
+                console.log("longer than 50 characters")
+            }
+            if (resJson.msg.errors.content.message == "NO_CONTENT_ERROR"){
+                console.log("no content")
+            }
+        }
+        
+    }
 
     return (
         <Card
@@ -28,8 +60,11 @@ const TitleCard = (props) => {
                 </Typography>
                 <TextField
                     multiline={true}
-                    sx={{ width: "80%", maxWidth: "500px"}}
+                    sx={{ width: "80%", maxWidth: "500px" }}
                     placeholder="I am..."
+                    onChange={(e) => {
+                        setStatus(e.target.value)
+                    }}
                     rows={3}
                 />
                 <Box
@@ -37,9 +72,12 @@ const TitleCard = (props) => {
                 >
                     <TextField
                         placeholder="Name (Optional)"
-                        sx={{width: "60%"}}
+                        sx={{ width: "60%" }}
+                        onChange={(e) => {
+                            setName(e.target.value)
+                        }}
                     />
-                    <Button variant="contained">Submit</Button>
+                    <Button variant="contained" onClick={handlePost}>Post</Button>
 
                 </Box>
 

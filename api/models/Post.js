@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const schema = new mongoose.Schema({
     from: {type: String, required: true},
     nameLower: {type: String},
-    body: {type: String, required: true},
+    content: {type: String, required: [true, "NO_CONTENT_ERROR"], maxlength: [50, "MAX_CHARACTERS_ERROR"]},
     datetime: {type: Date, default: Date.now},
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}]
 })

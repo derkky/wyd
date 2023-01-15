@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider, Typography, CardActions, Button, TextField } from '@mui/material';
+import { Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider, Typography, CardActions, Button, TextField, Box } from '@mui/material';
 
 
 const PostCard = (src) => {
@@ -29,7 +29,7 @@ const PostCard = (src) => {
 
                     <ListItem>
                         <ListItemText
-                            primary={<Typography sx={{fontSize: "14px"}}>Commenter name </Typography>}
+                            primary={<Typography sx={{ fontSize: "14px" }}>Commenter name </Typography>}
                             secondary={"comment"}
                         />
                     </ListItem>
@@ -42,12 +42,27 @@ const PostCard = (src) => {
                     justifyContent: "space-between"
                 }}
             >
-                <TextField
-                    placeholder={"Add a comment"}
-                />
-                <Button>
-                    Add comment
-                </Button>
+                <Box
+                    sx={{display: "flex", flexDirection:"column", gap: "5px", width: "100%"}}
+                >
+                    <TextField
+                        placeholder={"Add a comment"}
+                        size={"small"}
+                    />
+                    <Box
+                        sx={{display: "flex", justifyContent: "space-between"}}
+                    >
+                        <TextField
+                            placeholder={"Name (Optional)"}
+                            size={"small"}
+                        />
+                        <Button>
+                            Comment
+                        </Button>
+                    </Box>
+                </Box>
+
+
             </CardActions>
         </Card>
     )
