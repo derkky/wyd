@@ -8,8 +8,8 @@ const TitleCard = (props) => {
 
     const handlePost = async () => {
         const newPost = {
-            from: name,
-            content: status
+            from: name == "" ? "Anonymous" : name,
+            content:  status
         }
 
         const res = await fetch("http://localhost:8000/api/posts/new", { //change in prd
@@ -24,14 +24,9 @@ const TitleCard = (props) => {
 
         if (!res.ok) {
             console.log(resJson)
-
-            if (resJson.msg.errors.content.message == "MAX_CHARACTERS_ERROR"){
-                console.log("longer than 50 characters")
-            }
-            if (resJson.msg.errors.content.message == "NO_CONTENT_ERROR"){
-                console.log("no content")
-            }
         }
+
+        props.setPosts(prev => [ resJson.post, ...prev])
         
     }
 

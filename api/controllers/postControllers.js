@@ -15,7 +15,9 @@ const getPostsByName = async (req, res) => {
         res.status(200).json({ msg: posts })
 
     } catch (err) {
-        res.status(500).json({ msg: err })
+        const errorFields = Object.keys(err.errors)
+        const errors = errorFields.map(errField => err.errors[errField].message)
+        res.status(500).json({ msg: errors })
     }
 }
 
@@ -26,9 +28,11 @@ const createPost = async (req, res) => {
 
     try {
         await newPost.save()
-        res.status(200).json({ msg: "New post created" })
+        res.status(200).json({ msg: "New post created", post: newPost })
     } catch (err) {
-        res.status(500).json({ msg: err })
+        const errorFields = Object.keys(err.errors)
+        const errors = errorFields.map(errField => err.errors[errField].message)
+        res.status(500).json({ msg: errors })
     }
 
 }

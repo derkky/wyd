@@ -14,7 +14,9 @@ const getPostComments = async (req, res) => {
         res.status(200).json({ msg: comments })
 
     } catch (err) {
-        res.status(500).json({ msg: err })
+        const errorFields = Object.keys(err.errors)
+        const errors = errorFields.map(errField => err.errors[errField].message)
+        res.status(500).json({ msg: errors })
     }
 }
 
@@ -30,9 +32,11 @@ const createComment = async (req, res) => {
         await newComment.save()
         await post.save()
 
-        res.status(200).json({ msg: "New comment created" })
+        res.status(200).json({ msg: "New comment created", comment: newComment })
     } catch (err) {
-        res.status(500).json({ msg: err })
+        const errorFields = Object.keys(err.errors)
+        const errors = errorFields.map(errField => err.errors[errField].message)
+        res.status(500).json({ msg: errors })
     }
 
 }

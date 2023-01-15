@@ -1,7 +1,38 @@
 import { Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider, Typography, CardActions, Button, TextField, Box } from '@mui/material';
+import { useState, useEffect } from "react"
 
+const PostCard = (props) => {
+    const [comment, setComment] = useState("")
+    const [name, setName] = useState("")
+    const [comments, setComments] = useState([])
 
-const PostCard = (src) => {
+    const handleComment = async () => {
+        const newComment = {
+            from: name == "" ? "Anonymous" : name,
+            content: comment,
+            postId: props.id // will be in props
+        }
+
+        const res = await fetch("http://localhost:8000/api/comments/new", {   //chg in prd
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newComment)
+        }) //change in prd
+
+        const resJson = await res.json()
+
+        if (!res.ok){
+            console.log(resJson.msg)
+        }
+
+        setComments(prev => [...prev, resJson.msg.comment])
+
+    }
+
+    //useEffect() // fetch comments
+
     return (
         <Card
             sx={{
@@ -9,12 +40,12 @@ const PostCard = (src) => {
                 minWidth: "290px"
             }}
         >
-            <CardHeader title={"Test"} subheader={"From: Poster name"} />
+            <CardHeader title={props.name} subheader={props.dt} />
             <CardContent>
                 <Typography
                     height={"80px"}
                 >
-                    lorem ipsum
+                    {props.content}
                 </Typography>
                 <Typography
                     variant="h6"
@@ -48,6 +79,7 @@ const PostCard = (src) => {
                     <TextField
                         placeholder={"Add a comment"}
                         size={"small"}
+                        onChange={(e) => setComment(e.target.value)}
                     />
                     <Box
                         sx={{display: "flex", justifyContent: "space-between"}}
@@ -55,8 +87,9 @@ const PostCard = (src) => {
                         <TextField
                             placeholder={"Name (Optional)"}
                             size={"small"}
+                            onChange={(e) => setName(e.target.value)}
                         />
-                        <Button>
+                        <Button onClick={handleComment}>
                             Comment
                         </Button>
                     </Box>
