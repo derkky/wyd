@@ -11,7 +11,7 @@ const getPostComments = async (req, res) => {
             .skip(req.query.page * limit)
             .limit(limit)
 
-        res.status(200).json({ msg: comments })
+        res.status(200).json({ msg: comments, page: req.query.page ?? 0 })
 
     } catch (err) {
         const errorFields = Object.keys(err.errors)

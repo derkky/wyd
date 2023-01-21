@@ -1,15 +1,18 @@
-import { Typography, Card, CardContent, Box, TextField, Button } from '@mui/material';
+import { Typography, Card, CardContent, Box, TextField, Button, LinearProgress } from '@mui/material';
 import { useState } from "react"
 
 const TitleCard = (props) => {
 
     const [name, setName] = useState("")
     const [status, setStatus] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [errors, setErrors] = useState([])
 
     const handlePost = async () => {
+        setLoading(true)
         const newPost = {
             from: name == "" ? "Anonymous" : name,
-            content:  status
+            content: status
         }
 
         const res = await fetch("http://localhost:8000/api/posts/new", { //change in prd
@@ -23,11 +26,16 @@ const TitleCard = (props) => {
         const resJson = await res.json()
 
         if (!res.ok) {
-            console.log(resJson)
+            setErrors(resJson.msg)
+        } else{
+            props.setPosts(prev => [resJson.post, ...prev])
+            setErrors([])
         }
 
-        props.setPosts(prev => [ resJson.post, ...prev])
-        
+        setLoading(false)
+        props.setSnackbarOpen(true)
+        props.setSnackbarMessage("Posted.")
+
     }
 
     return (
@@ -55,6 +63,10 @@ const TitleCard = (props) => {
                 </Typography>
                 <TextField
                     multiline={true}
+                    error={errors.length > 0}
+                    label={errors.length > 0 ? "Error" : ""}
+                    id="outlined-error-helper-text"
+                    helperText={errors.includes("NO_CONTENT_ERROR") ? "Comment cannot be empty" : ""}
                     sx={{ width: "80%", maxWidth: "500px" }}
                     placeholder="I am..."
                     onChange={(e) => {
@@ -73,7 +85,9 @@ const TitleCard = (props) => {
                         }}
                     />
                     <Button variant="contained" onClick={handlePost}>Post</Button>
-
+                </Box>
+                <Box sx={{ width: '100%' }}>
+                    {loading ? <LinearProgress /> : null}
                 </Box>
 
             </CardContent>

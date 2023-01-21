@@ -12,7 +12,7 @@ const getPostsByName = async (req, res) => {
             .limit(limit)
             .populate({path: "comments", options: {limit: 5}})
 
-        res.status(200).json({ msg: posts })
+        res.status(200).json({ msg: posts, page: req.query.page ?? 0 })
 
     } catch (err) {
         const errorFields = Object.keys(err.errors)

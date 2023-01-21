@@ -8,9 +8,9 @@ const PostCardContainer = (props) => {
             const res = await fetch("http://localhost:8000/api/posts/?name=")
             const resJson = await res.json()
 
-            if (!res.ok){
+            if (!res.ok) {
                 console.log(resJson.msg)
-            } else{
+            } else {
                 props.setPosts(resJson.msg)
             }
         }
@@ -29,8 +29,18 @@ const PostCardContainer = (props) => {
             <Box
                 sx={{ display: "flex", marginTop: "2em", flexWrap: "wrap", justifyContent: { xs: "center", sm: "center", md: "space-between" }, gap: "1em" }}
             >
-                {props.posts.map(pst => <PostCard key={pst._id} id={pst._id} name={pst.from} dt={pst.datetime} content={pst.content} comments={pst.comments}/>)}
-                
+                {props.posts.map(pst =>
+                    <PostCard
+                        key={pst._id}
+                        id={pst._id}
+                        name={pst.from}
+                        dt={pst.datetime}
+                        content={pst.content}
+                        comments={pst.comments}
+                        setSnackbarOpen={props.setSnackbarOpen}
+                        setSnackbarMessage={props.setSnackbarMessage}
+                    />)}
+
             </Box>
 
         </Paper>

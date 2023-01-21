@@ -1,12 +1,17 @@
-import { Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider, Typography, CardActions, Button, TextField, Box } from '@mui/material';
-import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider, Typography, CardActions, Button, TextField, Box, LinearProgress } from '@mui/material';
+import React, { useState, useEffect, useMemo } from "react"
+import debounce from 'lodash.debounce';
 
 const PostCard = (props) => {
     const [comment, setComment] = useState("")
     const [name, setName] = useState("")
     const [comments, setComments] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [errors, setErrors] = useState([])
+    const [page, setPage] = useState(1)
 
     const handleComment = async () => {
+        setLoading(true)
         const newComment = {
             from: name == "" ? "Anonymous" : name,
             content: comment,
@@ -23,15 +28,52 @@ const PostCard = (props) => {
 
         const resJson = await res.json()
 
-        if (!res.ok){
-            console.log(resJson.msg)
+        if (!res.ok) {
+            setErrors(resJson.msg)
+        } else {
+            setComments(prev => [...prev, resJson.comment])
+            setErrors([])
+            props.setSnackbarOpen(true)
+            props.setSnackbarMessage("Comment posted.")
         }
 
-        setComments(prev => [...prev, resJson.msg.comment])
-
+        setLoading(false)
     }
 
-    //useEffect() // fetch comments
+    const handleScroll = async (e) => {
+        const bottom = e.target.scrollHeight - e.target.scrollTop == e.target.clientHeight;
+        if (bottom) {
+            console.log("bottom")
+            const commentsRes = await fetch(`http://localhost:8000/api/comments/${props.id}?page=${page + 1}`)
+
+            const resJson = await commentsRes.json()
+
+            if (!commentsRes.ok) {
+                console.log(resJson.msg)
+            } else if (resJson.msg.length > 0){
+                setComments(prev => [...prev, ...resJson.msg])
+                setPage(resJson.page)  
+            }
+        }
+    }
+
+    const debouncedHandleScroll = useMemo(() => debounce(handleScroll, 300), [page])
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            const commentsRes = await fetch(`http://localhost:8000/api/comments/${props.id}`)
+
+            const resJson = await commentsRes.json()
+
+            if (!commentsRes.ok) {
+                console.log(resJson.msg)
+            }
+
+            setComments(resJson.msg)
+        }
+
+        fetchComments()
+    }, [])
 
     return (
         <Card
@@ -54,18 +96,32 @@ const PostCard = (props) => {
                     Comments
                 </Typography>
 
-                <List
-                    sx={{ height: "150px", overflowY: "scroll" }}
+                <div
+                    onScroll={debouncedHandleScroll}
+                    style={{ height: "150px", overflowY: "scroll" }}
                 >
+                    <List
+                    >
+                        {
+                            comments.length == 0 ?
+                                <Typography>No comments yet </Typography> :
+                                comments.map(cmt => {
+                                    return (
+                                        <React.Fragment key={cmt._id}>
+                                            <ListItem>
+                                                <ListItemText
+                                                    primary={<Typography sx={{ fontSize: "14px" }}> {cmt.from} </Typography>}
+                                                    secondary={cmt.content}
+                                                />
+                                            </ListItem>
+                                            <Divider variant="middle" component="li" />
+                                        </React.Fragment>
+                                    )
+                                })
+                        }
+                    </List>
+                </div>
 
-                    <ListItem>
-                        <ListItemText
-                            primary={<Typography sx={{ fontSize: "14px" }}>Commenter name </Typography>}
-                            secondary={"comment"}
-                        />
-                    </ListItem>
-                    <Divider variant="middle" component="li" />
-                </List>
             </CardContent>
             <CardActions
                 sx={{
@@ -74,15 +130,19 @@ const PostCard = (props) => {
                 }}
             >
                 <Box
-                    sx={{display: "flex", flexDirection:"column", gap: "5px", width: "100%"}}
+                    sx={{ display: "flex", flexDirection: "column", gap: "5px", width: "100%" }}
                 >
                     <TextField
+                        error={errors.length > 0}
+                        label={errors.length > 0 ? "Error" : ""}
+                        id="outlined-error-helper-text"
+                        helperText={errors.includes("NO_CONTENT_ERROR") ? "Comment cannot be empty" : ""}
                         placeholder={"Add a comment"}
                         size={"small"}
                         onChange={(e) => setComment(e.target.value)}
                     />
                     <Box
-                        sx={{display: "flex", justifyContent: "space-between"}}
+                        sx={{ display: "flex", justifyContent: "space-between" }}
                     >
                         <TextField
                             placeholder={"Name (Optional)"}
@@ -93,8 +153,10 @@ const PostCard = (props) => {
                             Comment
                         </Button>
                     </Box>
+                    <Box sx={{ width: '100%' }}>
+                        {loading ? <LinearProgress /> : null}
+                    </Box>
                 </Box>
-
 
             </CardActions>
         </Card>
