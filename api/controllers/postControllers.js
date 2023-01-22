@@ -4,8 +4,9 @@ const getPostsByName = async (req, res) => {
     const limit = 10
     // req.query.page
     try {
+        const queryName = req.query.name ?? ""
         const posts = await Post.find({
-            "nameLower": { $regex: req.query.name, $options: "i" }
+            "nameLower": { $regex: queryName, $options: "i" }
         })
             .sort({ "datetime": "desc" })
             .skip(req.query.page * limit)
