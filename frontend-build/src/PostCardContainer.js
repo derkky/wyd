@@ -1,8 +1,9 @@
 import { Typography, Paper, Box } from '@mui/material';
 import PostCard from './PostCard';
-import { useEffect } from "react"
+import { useEffect,  } from "react"
 
 const PostCardContainer = (props) => {
+
     useEffect(() => {
         const getPosts = async () => {
             const res = await fetch("http://localhost:8000/api/posts/?name=")
@@ -18,6 +19,8 @@ const PostCardContainer = (props) => {
         getPosts()
     }, [])
 
+
+
     return (
         <Paper sx={{
             paddingX: { xs: "1em", sm: "2em", md: "5em" },
@@ -28,6 +31,7 @@ const PostCardContainer = (props) => {
             </Typography>
             <Box
                 sx={{ display: "flex", marginTop: "2em", flexWrap: "wrap", justifyContent: { xs: "center", sm: "center", md: "space-between" }, gap: "1em" }}
+                component="div"
             >
                 {props.posts.map(pst =>
                     <PostCard

@@ -1,7 +1,7 @@
 import Post from "../models/Post.js"
 
 const getPostsByName = async (req, res) => {
-    const limit = 25
+    const limit = 10
     // req.query.page
     try {
         const posts = await Post.find({

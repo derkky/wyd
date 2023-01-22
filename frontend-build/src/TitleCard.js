@@ -41,12 +41,12 @@ const TitleCard = (props) => {
     return (
         <Card
             sx={{
-                height: "300px",
+                height: "400px",
                 width: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                pb: "2em"
+                pb: "1.2em"
             }}
         >
             <CardContent

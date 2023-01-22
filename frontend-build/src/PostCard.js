@@ -8,7 +8,7 @@ const PostCard = (props) => {
     const [comments, setComments] = useState([])
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState([])
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(0)
 
     const handleComment = async () => {
         setLoading(true)
@@ -41,7 +41,7 @@ const PostCard = (props) => {
     }
 
     const handleScroll = async (e) => {
-        const bottom = e.target.scrollHeight - e.target.scrollTop == e.target.clientHeight;
+        const bottom = e.target.scrollHeight - e.target.clientHeight <= e.target.scrollTop + 50;
         if (bottom) {
             console.log("bottom")
             const commentsRes = await fetch(`http://localhost:8000/api/comments/${props.id}?page=${page + 1}`)
