@@ -17,7 +17,8 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(helmet({
-    crossOriginEmbedderPolicy: false
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false
 }))
 app.use(cors())
 
