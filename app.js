@@ -16,11 +16,7 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(helmet({
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: false
-}))
-app.use(cors())
+
 
 app.use("/api/posts", postRoutes)
 app.use("/api/comments", commentRoutes)
