@@ -93,10 +93,12 @@ const PostCardContainer = (props) => {
         }}>
             <Box
                 sx={{
-                    display: "flex"
+                    display: "flex",
+                    flexWrap: "nowrap",
+                    gap: "1em"
                 }}
             >
-                <Typography variant="h6" sx={{ flex: 1 }}>
+                <Typography variant="h6" sx={{ flex: 1, whiteSpace: "nowrap" }}>
                     What others are doing
                 </Typography>
                 <SearchBar setPosts={props.setPosts} setPage={props.setPage} name={name} setName={setName}/>
