@@ -18,7 +18,7 @@ const PostCard = (props) => {
             postId: props.id // will be in props
         }
 
-        const res = await fetch("http://localhost:8000/api/comments/new", {   //chg in prd
+        const res = await fetch("/api/comments/new", {   //chg in prd
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -44,7 +44,7 @@ const PostCard = (props) => {
         const bottom = e.target.scrollHeight - e.target.clientHeight <= e.target.scrollTop + 50;
         if (bottom) {
             console.log("bottom")
-            const commentsRes = await fetch(`http://localhost:8000/api/comments/${props.id}?page=${page + 1}`)
+            const commentsRes = await fetch(`/api/comments/${props.id}?page=${page + 1}`)
 
             const resJson = await commentsRes.json()
 
@@ -61,7 +61,7 @@ const PostCard = (props) => {
 
     useEffect(() => {
         const fetchComments = async () => {
-            const commentsRes = await fetch(`http://localhost:8000/api/comments/${props.id}`)
+            const commentsRes = await fetch(`/api/comments/${props.id}`)
 
             const resJson = await commentsRes.json()
 

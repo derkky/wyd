@@ -15,7 +15,7 @@ const TitleCard = (props) => {
             content: status
         }
 
-        const res = await fetch("http://localhost:8000/api/posts/new", { //change in prd
+        const res = await fetch("/api/posts/new", { //change in prd
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

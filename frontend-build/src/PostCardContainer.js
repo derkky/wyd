@@ -7,7 +7,7 @@ import debounce from "lodash.debounce"
 const SearchBar = (props) => {
 
     const handleSearch = async () => {
-        const res = await fetch(`http://localhost:8000/api/posts/?name=${props.name}`)
+        const res = await fetch(`/api/posts/?name=${props.name}`)
         const resJson = await res.json()
 
         if (!res.ok) {
@@ -43,7 +43,7 @@ const PostCardContainer = (props) => {
 
     useEffect(() => {
         const getPosts = async () => {
-            const res = await fetch("http://localhost:8000/api/posts/?name=")
+            const res = await fetch("/api/posts/?name=")
             const resJson = await res.json()
 
             if (!res.ok) {
@@ -63,7 +63,7 @@ const PostCardContainer = (props) => {
         const bottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 10
         if (bottom) {
             console.log("bottom")
-            const postRes = await fetch(`http://localhost:8000/api/posts/?name=${name}&page=${Number(page) + 1}`)
+            const postRes = await fetch(`/api/posts/?name=${name}&page=${Number(page) + 1}`)
 
             const resJson = await postRes.json()
 
