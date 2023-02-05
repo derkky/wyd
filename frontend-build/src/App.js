@@ -23,7 +23,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Stack spacing={2} marginX={5}>
+      <Stack spacing={2} marginX={{xs: 1, md: 5}}>
         <TitleCard setPosts={setPosts} setSnackbarOpen={setSnackbarOpen} setSnackbarMessage={setSnackbarMessage} />
         <PostCardContainer posts={posts} setPosts={setPosts} setSnackbarOpen={setSnackbarOpen} setSnackbarMessage={setSnackbarMessage} />
       </Stack>
