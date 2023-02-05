@@ -94,7 +94,7 @@ const PostCardContainer = (props) => {
             <Box
                 sx={{
                     display: "flex",
-                    flexWrap: "nowrap",
+                    flexWrap: "wrap",
                     gap: "1em"
                 }}
             >
